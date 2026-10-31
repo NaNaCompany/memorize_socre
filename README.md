@@ -49,12 +49,16 @@ python tools/serve.py 8766
 
 ## 예제 악보
 
-저장소에는 악보 파일을 넣지 않습니다. 전사본의 출처와 이용 조건을 확인할 수 없기 때문입니다.
-`data/` 폴더에 `rachmaninoff-op39-no6.musicxml`, `bartok-allegro-barbaro.musicxml`을 두면 로컬에서 "예제"로 보입니다(`.gitignore`로 제외됨).
+- `samples/little-waltz.musicxml`은 이 프로젝트용으로 새로 쓴 16마디 연습곡이라 저장소에 포함합니다. `python tools/make_sample.py`로 다시 만들 수 있습니다.
+- 출처와 이용 조건을 확인할 수 없는 전사본은 저장소에 넣지 않습니다. `data/`에 `rachmaninoff-op39-no6.musicxml`, `bartok-allegro-barbaro.musicxml`을 두면 로컬에서만 "예제"로 보입니다(`.gitignore`로 제외됨).
+
+`assets/demo-*.gif`는 위 샘플 곡으로 실제 앱 화면을 캡처해 만든 메인 화면의 활용 장면입니다.
 
 ## 배포
 
 GitHub Pages(브랜치 루트)로 배포합니다. 빌드 단계가 없습니다.
+
+호스팅이 JS·CSS를 4시간 캐시하므로, 배포 직전에 `python tools/stamp.py`로 `index.html`의 `?v=` 값을 갱신한 뒤 커밋합니다.
 
 ## 라이선스와 출처
 

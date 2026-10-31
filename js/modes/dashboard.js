@@ -14,7 +14,8 @@ export function mountDashboard(root, ctx) {
   score.measures.forEach((m, i) => {
     const s = progress.mastery(i);
     grid.append(h('button', {
-      class: 'cell', style: `background:${color(s)};${s !== null ? 'color:#fff' : ''}`, role: 'listitem',
+      // 노란빛이 도는 중간 숙련도에서는 흰 글자가 안 보여 어두운 글자로 바꾼다.
+      class: 'cell', style: `background:${color(s)};${s === null ? '' : `color:${s > 0.38 && s < 0.72 ? '#1f2a0c' : '#fff'}`}`, role: 'listitem',
       title: s === null ? `${m.number}마디: 아직 안 풀었음` : `${m.number}마디: 숙련도 ${Math.round(s * 100)}%`,
       onClick: () => ctx.open('view', { measure: i }),
     }, m.number));

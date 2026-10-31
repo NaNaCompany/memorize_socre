@@ -98,6 +98,9 @@ function addMarker(box, head, staff, label) {
   return marker;
 }
 
+// 검은 건반 중심이 흰 건반 경계에서 벗어나는 정도(흰 건반 폭 단위). C♯ D♯ F♯ G♯ A♯ 순.
+const BLACK_SHIFT = { 1: -0.07, 3: 0.07, 6: -0.1, 8: 0, 10: 0.1 };
+
 // 건반 입력. 범위를 답 주변으로 잡되 위치가 답을 알려주지 않게 호출 쪽에서 흔든다.
 export function pianoKeys(low, high, onPress) {
   const BLACK = new Set([1, 3, 6, 8, 10]);
@@ -107,6 +110,8 @@ export function pianoKeys(low, high, onPress) {
   for (let m = low; m <= high; m++) if (!BLACK.has(m % 12)) whites.push(m);
   const wrap = h('div', { class: 'piano', role: 'group', 'aria-label': '건반으로 답하기' });
   wrap.style.setProperty('--keys', whites.length);
+  // 실제 피아노 비율: 흰 건반 폭 23.5mm, 보이는 길이 약 150mm. 가로가 달라져도 세로가 같은 비율로 따라간다.
+  wrap.style.setProperty('--ar', ((whites.length * 23.5) / 150).toFixed(4));
   const w = 100 / whites.length;
   const NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
   const nameOf = (m) => `${NAMES[m % 12]}${Math.floor(m / 12) - 1}`;
@@ -125,14 +130,18 @@ export function pianoKeys(low, high, onPress) {
     if (!BLACK.has(m % 12)) continue;
     const i = whites.indexOf(m - 1);
     if (i < 0) continue;
+    // 검은 건반은 폭이 흰 건반의 약 52%이고, 두 개·세 개 묶음의 바깥쪽 건반은 실제처럼 조금씩 바깥으로 치우친다.
+    const bw = w * 0.52;
+    const center = (i + 1 + BLACK_SHIFT[m % 12]) * w;
     const key = h('button', {
-      class: 'key black', 'aria-label': nameOf(m), 'data-midi': m, style: `left:${(i + 1) * w - w * 0.3}%;width:${w * 0.6}%`,
+      class: 'key black', 'aria-label': nameOf(m), 'data-midi': m, style: `left:${center - bw / 2}%;width:${bw}%`,
       onClick: () => press(m, key),
     });
     wrap.append(key);
   }
   // 좁은 화면에서는 건반이 가로로 스크롤된다. 정답 위치가 새지 않게 가운데에서 시작한다.
   const scroller = h('div', { class: 'piano-scroll' }, wrap);
+  scroller.style.setProperty('--keys', whites.length);
   requestAnimationFrame(() => { scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) / 2; });
   return scroller;
 }

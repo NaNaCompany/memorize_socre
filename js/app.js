@@ -15,8 +15,14 @@ import { mountConfusion, mountTell } from './modes/confusion.js';
 import { mountViewer } from './modes/viewer.js';
 import { mountDashboard } from './modes/dashboard.js';
 
-// data/ 폴더에 파일이 있을 때만 예제로 보인다. 저장소에는 포함하지 않는다.
+// 예제 악보. samples/는 이 프로젝트용으로 새로 쓴 곡이라 저장소에 포함한다.
+// data/ 폴더의 파일은 출처를 확인할 수 없어 저장소에 넣지 않고, 로컬에 있을 때만 예제로 보인다.
 const SAMPLES = [
+  {
+    id: 'sample-little-waltz', file: 'samples/little-waltz.musicxml', builtin: true, measures: 16,
+    title: '작은 왈츠 (연습용 샘플)', composer: '새로 쓴 연습곡',
+    note: '이 프로젝트용으로 새로 쓴 연습곡입니다. 셈여림, 헤어핀, 스타카토, 화음, 비슷한 마디가 모두 들어 있어 기능을 체험하기 좋습니다.',
+  },
   {
     id: 'rachmaninoff-op39-no6', file: 'data/rachmaninoff-op39-no6.musicxml',
     title: '에튀드 타블로 Op. 39 No. 6', composer: '라흐마니노프',
@@ -171,23 +177,61 @@ function masteryOf(p) {
   return new Progress(p.id, n).stats().avg;
 }
 
+// 활용 장면. gif는 assets/에 있으며, 없으면 카드를 감춘다.
+const DEMOS = [
+  { gif: 'assets/demo-puzzle.gif', title: '마디 퍼즐', text: '뒤섞인 마디를 끌어서 서로 자리를 바꿔 순서를 맞춰요.', wide: true },
+  { gif: 'assets/demo-blank.gif', title: '음표 빈칸', text: '가려진 음을 건반으로 맞혀요. 기둥 길이로 눈치챌 수 없어요.' },
+  { gif: 'assets/demo-chord.gif', title: '화음 빈칸', text: '화음이 가려지면 들어갈 음을 모두 골라요.' },
+  { gif: 'assets/demo-expression.gif', title: '악상 고르기', text: '가려진 셈여림·헤어핀·빠르기말을 객관식으로 골라요.' },
+  { gif: 'assets/demo-hands.gif', title: '짝이 되는 손', text: '오른손을 보고 함께 연주되는 왼손을 4지선다로 골라요.' },
+  { gif: 'assets/demo-fade.gif', title: '점점 지우기', text: '음표를 조금씩 지우며, 악보를 보지 않고도 떠올려 봐요.' },
+  { gif: 'assets/demo-progress.gif', title: '진도와 복습', text: '틀린 마디는 곧 다시, 맞힌 마디는 점점 늦게. 숙련도가 색으로 보여요.' },
+];
+
+function showcase() {
+  return h('section', { class: 'showcase' },
+    h('h2', {}, '이렇게 연습해요'),
+    h('p', { class: 'showcase-lead' }, '실제 화면입니다. 올린 악보로 똑같이 연습할 수 있어요.'),
+    h('div', { class: 'demo-grid' }, DEMOS.map((d) => h('figure', { class: `demo-card${d.wide ? ' wide' : ''}` },
+      h('div', { class: 'demo-frame' }, h('img', {
+        src: d.gif, alt: `${d.title} 사용 장면`, loading: 'lazy', decoding: 'async',
+        onError: (e) => e.target.closest('.demo-card')?.remove(),
+      })),
+      h('figcaption', {}, h('b', {}, d.title), h('span', {}, d.text))))));
+}
+
+function reportList() {
+  return state.report.length ? h('ul', { class: 'report' }, state.report.map((r) => h('li', { class: r.ok ? 'ok' : 'fail' },
+    h('b', {}, r.ok ? '완료' : '실패'), h('span', {}, r.ok ? r.text : `${r.name}: ${r.text}`)))) : null;
+}
+
+function hero() {
+  const sample = state.library.find((p) => p.builtin);
+  return h('section', { class: 'hero' },
+    h('h1', {}, '내 악보를 올리면', h('br'), h('em', {}, '외울 수 있게'), ' 만들어 드려요'),
+    h('p', { class: 'hero-lead' }, '마디 퍼즐, 음표 빈칸, 악상 퀴즈로 눈과 귀와 손에 악보를 새겨 보세요.'),
+    h('div', { class: 'hero-cta' },
+      h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '악보 불러오기'),
+      sample ? h('button', { class: 'btn ghost big', onClick: () => openPiece(sample.id) }, '샘플로 먼저 해보기') : null),
+    h('p', { class: 'hero-sub' }, `MusicXML · XML · MXL 파일${isNarrow() ? '' : ' · 화면에 끌어다 놓아도 돼요'} · 파일은 서버로 전송되지 않아요`),
+    h('ul', { class: 'hero-chips' }, ['마디 퍼즐', '음표 빈칸', '악상 퀴즈', '한 손 가리기', '진도 복습'].map((t) => h('li', {}, t))),
+    reportList());
+}
+
 function viewLibrary() {
   main.replaceChildren();
   const mine = state.library.filter((p) => !p.sample);
   const samples = state.library.filter((p) => p.sample);
 
   const zone = h('div', { class: 'dropzone' },
-    h('h1', {}, mine.length ? '악보 추가' : '내 악보를 올려서 외워 보세요'),
-    h('p', {}, mine.length
-      ? 'MusicXML 파일을 끌어다 놓거나 아래 버튼으로 고르세요. 여러 개를 한 번에 올려도 됩니다.'
-      : '악보 편집기에서 내보낸 MusicXML 파일(.musicxml, .xml, .mxl)을 올리면 곧바로 연습할 수 있습니다.'),
+    h('h1', {}, '악보 추가'),
+    h('p', {}, 'MusicXML 파일을 끌어다 놓거나 아래 버튼으로 고르세요. 여러 개를 한 번에 올려도 됩니다.'),
     h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '파일 선택'),
     h('p', { class: 'dz-sub' }, isNarrow() ? '파일은 서버로 전송되지 않습니다.' : '또는 이 화면 아무 곳에나 끌어다 놓으세요. 파일은 서버로 전송되지 않습니다.'),
-    state.report.length ? h('ul', { class: 'report' }, state.report.map((r) => h('li', { class: r.ok ? 'ok' : 'fail' },
-      h('b', {}, r.ok ? '완료' : '실패'), h('span', {}, r.ok ? r.text : `${r.name}: ${r.text}`)))) : null,
+    reportList(),
   );
 
-  main.append(h('div', { class: 'library' }, zone));
+  main.append(h('div', { class: 'library' }, mine.length ? zone : hero()));
 
   const card = (p) => {
     const mastery = masteryOf(p);
@@ -202,7 +246,10 @@ function viewLibrary() {
   };
 
   if (mine.length) main.append(h('section', { class: 'lib-section' }, h('h2', {}, '내 악보'), h('div', { class: 'piece-cards' }, mine.map(card))));
+  // 처음 방문이면 활용 장면을 먼저 보여 주고, 예제는 그 아래에 둔다.
+  if (!mine.length) main.append(showcase());
   if (samples.length) main.append(h('section', { class: 'lib-section' }, h('h2', {}, '예제'), h('div', { class: 'piece-cards' }, samples.map(card))));
+  if (mine.length) main.append(showcase());
 }
 
 function renamePiece(p) {

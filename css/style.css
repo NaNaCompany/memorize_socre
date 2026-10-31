@@ -46,6 +46,8 @@
 }
 
 * { box-sizing: border-box; }
+/* display를 지정한 요소(.btn 등)에서도 hidden 속성이 먹도록 한다. */
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; font-size: 15px; -webkit-tap-highlight-color: transparent; }
 a { color: var(--accent); }
@@ -108,8 +110,32 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
 .segmented button + button { border-left: 1px solid var(--line); }
 .segmented button.on { background: var(--ink); color: var(--bg); }
 
+/* 메인 히어로와 활용 장면 */
+.hero { padding: 28px 4px 8px; }
+.hero h1 { font-size: clamp(28px, 6vw, 44px); line-height: 1.2; letter-spacing: -.03em; margin: 0 0 14px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-lead { margin: 0 0 22px; font-size: 17px; color: var(--muted); max-width: 40ch; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.hero-sub { margin: 14px 0 0; font-size: 13.5px; color: var(--muted); }
+.hero-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 18px 0 0; }
+.hero-chips li { padding: 6px 14px; border-radius: 99px; font-size: 14px; font-weight: 600; background: var(--accent-soft); color: var(--accent); }
+.hero-chips li:nth-child(2n) { background: var(--good-bg); color: var(--good); }
+.hero-chips li:nth-child(3n) { background: var(--bad-bg); color: var(--bad); }
+.hero .report { max-width: 560px; }
+.showcase { margin: 36px auto 0; max-width: 1040px; }
+.showcase-lead { margin: 0 0 14px; color: var(--muted); }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; align-items: start; grid-auto-flow: dense; }
+@media (min-width: 900px) { .demo-card.wide { grid-column: span 2; } }
+.demo-card { margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.demo-frame { background: #fff; display: grid; place-items: center; }
+.demo-frame img { display: block; width: 100%; height: auto; }
+.demo-card figcaption { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 14px; }
+.demo-card figcaption b { font-size: 16px; }
+.demo-card figcaption span { color: var(--muted); font-size: 14px; }
+
 /* 보관함 */
 .library { max-width: 720px; margin: 0 auto; }
+.library:has(.hero) { max-width: 1040px; }
 .dropzone { text-align: center; background: var(--card); border: 2px dashed var(--line-strong); border-radius: 16px; padding: 36px 24px 28px; }
 .dropzone p { margin: 0 auto 18px; color: var(--muted); max-width: 46ch; }
 .dropzone .dz-sub { margin: 14px auto 0; font-size: 13px; }
@@ -199,14 +225,19 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
 .blank-marker.current { background: color-mix(in srgb, var(--on-sheet-bad) 28%, transparent); border-style: solid; }
 
 /* 건반 */
-.piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; border-radius: 0 0 8px 8px; }
-.piano { position: relative; height: 136px; min-width: calc(var(--keys, 14) * 34px); user-select: none; touch-action: pan-x; }
-.key { position: absolute; top: 0; border: 1px solid #4b5160; padding: 0; }
-.key.white { height: 100%; background: #fff; border-radius: 0 0 6px 6px; z-index: 1; display: flex; align-items: flex-end; justify-content: center; }
-.key.white small { font-size: 10px; color: #5b6370; padding-bottom: 4px; pointer-events: none; }
-.key.black { height: 60%; background: #1d2027; border-radius: 0 0 4px 4px; z-index: 2; }
-.key.white:hover { background: #eef0f5; }
-.key.black:hover { background: #454b59; }
+/* 건반은 항상 실제 피아노 비율(흰 건반 폭:길이 ≈ 1:6.4, 검은 건반 폭 52%·길이 63%)로 그린다.
+   높이는 aspect-ratio(--ar)가 정하므로 가로가 늘면 세로도 같은 비율로 늘고, 너무 커지지 않게 건반당 34px에서 멈춘다. */
+.piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; width: 100%; max-width: calc(var(--keys, 14) * 34px + 16px); margin: 0 auto; padding: 10px 8px 0; background: linear-gradient(#2c2f39, #1b1d24); border-radius: 12px; }
+.piano { position: relative; width: 100%; min-width: calc(var(--keys, 14) * 24px); aspect-ratio: var(--ar, 2.2); user-select: none; touch-action: pan-x; }
+.key { position: absolute; top: 0; border: 0; padding: 0; }
+.key.white { height: 100%; z-index: 1; display: flex; align-items: flex-end; justify-content: center; border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #fbfbfc 0%, #ffffff 70%, #e6e9ee 100%); box-shadow: inset -1px 0 0 #c3c8d1, inset 1px 0 0 #ffffff, inset 0 -3px 0 #d5d9e1; }
+.key.white small { font-size: 10px; color: #6a7280; padding-bottom: 7px; pointer-events: none; }
+.key.black { height: 63%; z-index: 2; border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #3b3f4b 0%, #14161c 88%, #2a2d37 100%); box-shadow: inset 1px 0 0 rgb(255 255 255 / .12), 0 2px 3px rgb(0 0 0 / .45); }
+.key.white:hover { background: linear-gradient(180deg, #f1f3f8 0%, #f7f8fb 70%, #dde1e9 100%); }
+.key.black:hover { background: linear-gradient(180deg, #4a4f5d 0%, #1e2128 88%, #333743 100%); }
+.key.white:active { box-shadow: inset -1px 0 0 #c3c8d1, inset 1px 0 0 #fff, inset 0 -1px 0 #d5d9e1; }
 .key.white.picked, .key.white.picked:hover { background: #dcdcfb; box-shadow: inset 0 0 0 3px #4338ca; }
 .key.black.picked, .key.black.picked:hover { background: #4338ca; }
 .key.right, .key.right:hover { background: #2f9e62; }
@@ -222,13 +253,15 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
 .choice.wrong, .sheet-choice.wrong { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
 .choice:disabled { cursor: default; }
 .sheet-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px; }
+/* 한 마디짜리 보기는 항상 한 줄에 네 개. 좁은 화면에서는 아래 미디어 쿼리가 두 줄로 바꾼다. */
+.sheet-choices.compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .sheet-choice { position: relative; padding: 6px; background: var(--card); border: 2px solid var(--line); border-radius: var(--radius); }
 .sheet-choice:hover:not(:disabled) { border-color: var(--accent); }
 .sheet-choice .sheet { border: 0; padding: 2px; }
 .choice-num { position: absolute; top: 4px; left: 8px; font-size: 12px; font-weight: 700; color: #5b6370; z-index: 1; }
 
 /* 순서 퍼즐 */
-.slots.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+.slots.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
 .slots.stack { display: flex; flex-direction: column; gap: 10px; }
 .slot { position: relative; min-height: 112px; padding: 8px 8px 8px 30px; background: var(--sunken); border: 1.5px solid transparent; border-radius: var(--radius); display: flex; align-items: center; transition: background .12s, border-color .12s; }
 .slot.over { border-color: var(--accent); background: var(--accent-soft); }
@@ -338,8 +371,9 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
   .sheet { padding: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .sheet.wide svg { min-width: 520px; }
   .piece .sheet { overflow: hidden; }
-  .piano { height: 124px; min-width: calc(var(--keys, 14) * 40px); }
-  .key.white small { font-size: 9px; }
+  .piano-scroll { padding: 8px 4px 0; border-radius: 10px; }
+  .piano { min-width: calc(var(--keys, 14) * 26px); }
+  .key.white small { font-size: 9px; padding-bottom: 5px; }
   .locate-slider { height: 44px; }
   .viewer-bar { position: static; flex-wrap: nowrap; overflow-x: auto; padding: 8px 0; -webkit-overflow-scrolling: touch; }
   .viewer-bar > * { flex: none; }
