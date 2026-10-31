@@ -1,0 +1,84 @@
+/* Shared visual direction with score_reading; practice logic remains in app.js. */
+:root {
+  color-scheme: light;
+  --bg: #fbf3ea; --card: #fff; --sunken: #f5eee6;
+  --ink: #2b1f18; --muted: #75685b; --line: #f0e2d0; --line-strong: #d8c9b6;
+  --accent: #c65c34; --accent-hover: #ad4822; --accent-ink: #fff;
+  --accent-soft: #fdece0; --good: #167a45; --good-bg: #e5f4ec;
+  --bad: #b9342b; --bad-bg: #fcebe9; --radius: 14px;
+}
+body { position: relative; isolation: isolate; padding: 24px; }
+.page-backdrop { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(rgb(0 0 0 / .8),rgb(0 0 0 / .8)),url('../assets/main.gif') center / cover no-repeat; }
+.top { max-width: 1200px; margin: 0 auto 28px; padding: 12px 20px; top: 14px;
+  background: var(--card); border: 1px solid rgb(255 255 255 / .5); border-radius: 14px;
+  box-shadow: 0 10px 24px rgb(30 30 35 / .1); flex-wrap: wrap; }
+.brand { font-size: 20px; }
+#nav { margin-left: auto; order: 0; }
+.piece-btn { margin-left: 0; max-width: 220px; }
+.add-btn { border-radius: 99px; }
+main { max-width: 1200px; padding: 28px; background: var(--card); border-radius: 22px; min-height: 60vh; }
+main.library-page { padding: 0; background: none; }
+.library, .library:has(.hero) { max-width: none; }
+.hero { padding: 22px 0 30px; }
+.hero-layout { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
+.hero-copy { min-width: 0; }
+.hero-kicker { margin: 0 0 12px; color: #f4a95f; font-size: 13px; font-weight: 700; letter-spacing: .12em; }
+.hero h1 { color: #fff; font-size: clamp(34px,5vw,52px); line-height: 1.2; margin: 0 0 18px; }
+.hero-lead { color: rgb(255 255 255 / .86); font-size: 16px; line-height: 1.8; max-width: 35ch; margin-bottom: 24px; }
+.hero-cta { gap: 10px; }
+.hero .btn { border-radius: 99px; padding: 13px 23px; }
+.hero .btn.primary { background: linear-gradient(110deg,#e78b4f,#c65c34); color: #fff; }
+.hero .btn.ghost { background: transparent; border-color: rgb(255 255 255 / .4); color: #fff; }
+.hero .btn.ghost:hover { background: rgb(255 255 255 / .1); border-color: #fff; }
+.hero-sub { color: rgb(255 255 255 / .7); max-width: 48ch; line-height: 1.7; font-size: 12px; }
+.hero-preview { margin: 0; padding: 20px; background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 20px 50px rgb(0 0 0 / .15); min-width: 0; }
+.hero-preview img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.hero-preview figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 13px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.hero-preview b { color: var(--ink); }
+.showcase { margin: 20px 0 28px; max-width: none; }
+.showcase > h2 { color: #fff; margin-bottom: 16px; font-size: 20px; }
+.feature-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.feature-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+.feature-num { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: #b9512a; background: #fdece0; font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+.feature-card:nth-child(2) .feature-num { color: #6956b7; background: #eee9fd; }
+.feature-card h3 { margin: 0 0 7px; font-size: 16px; }
+.feature-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.demo-more { margin-top: 18px; border: 1px solid rgb(255 255 255 / .2); border-radius: 14px; padding: 0 18px; }
+.demo-more > summary { cursor: pointer; color: rgb(255 255 255 / .85); padding: 14px 0; font-size: 13px; }
+.demo-more .demo-grid { padding: 4px 0 18px; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.demo-more .demo-card.wide { grid-column: auto; }
+.lib-section { max-width: none; margin: 24px 0 0; }
+.lib-section > h2 { color: #fff; margin-bottom: 12px; }
+.piece-cards { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.piece-card { min-width: 0; }
+.foot { max-width: 1200px; color: rgb(255 255 255 / .65); border-color: rgb(255 255 255 / .15); padding: 20px 0 8px; margin-top: 30px; }
+.foot a { color: inherit; }
+.more-apps { display: block; text-align: right; color: #999; font-size: 10px; text-decoration: none; margin-top: 12px; }
+.motion-control { display: block; margin: 12px 0 0 auto; border: 1px solid rgb(255 255 255 / .25); background: rgb(0 0 0 / .2); color: rgb(255 255 255 / .7); border-radius: 6px; padding: 5px 8px; font-size: 11px; }
+body.motion-paused .page-backdrop { background-image: linear-gradient(rgb(0 0 0 / .8),rgb(0 0 0 / .8)),url('../assets/main-still.png'); }
+@media (max-width: 1000px) { .top { gap: 10px; } .piece-btn { display: none; } .hero-layout { gap: 24px; } }
+@media (max-width: 860px) { .hero-layout { grid-template-columns: 1fr; } .hero-copy { max-width: 600px; } .feature-grid { grid-template-columns: 1fr; gap: 12px; } .feature-card { display: grid; grid-template-columns: 40px 1fr; column-gap: 14px; padding: 18px; } .feature-num { grid-row: span 2; margin: 0; } .feature-card p { grid-column: 2; } .demo-more .demo-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 720px) {
+  body { padding: 14px 14px calc(var(--nav-h) + env(safe-area-inset-bottom) + 20px); }
+  .top { top: 8px; margin-bottom: 16px; padding: 10px 14px; }
+  .brand { font-size: 18px; }
+  .add-btn { margin-left: auto; }
+  .piece-btn { display: none; }
+  #nav { margin: 0; }
+  main { padding: 18px 14px; min-height: 60vh; }
+  main.library-page { padding: 0; }
+  .hero { padding: 12px 0 16px; }
+  .hero-layout { gap: 24px; }
+  .hero h1 { font-size: 36px; }
+  .hero-lead { font-size: 15px; margin-bottom: 20px; }
+  .hero .btn { flex: 1 1 130px; padding: 11px 15px; }
+  .hero-preview { padding: 14px; border-radius: 18px; }
+  .hero-preview figcaption { font-size: 12px; }
+  .demo-more .demo-grid { grid-template-columns: 1fr; }
+  .piece-cards { grid-template-columns: 1fr; }
+  .foot { padding: 18px 0 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:not(.motion-enabled) .page-backdrop { background-image: linear-gradient(rgb(0 0 0 / .8),rgb(0 0 0 / .8)),url('../assets/main-still.png'); }
+}

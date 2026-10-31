@@ -189,15 +189,23 @@ const DEMOS = [
 ];
 
 function showcase() {
-  return h('section', { class: 'showcase' },
-    h('h2', {}, '이렇게 연습해요'),
-    h('p', { class: 'showcase-lead' }, '실제 화면입니다. 올린 악보로 똑같이 연습할 수 있어요.'),
-    h('div', { class: 'demo-grid' }, DEMOS.map((d) => h('figure', { class: `demo-card${d.wide ? ' wide' : ''}` },
-      h('div', { class: 'demo-frame' }, h('img', {
-        src: d.gif, alt: `${d.title} 사용 장면`, loading: 'lazy', decoding: 'async',
-        onError: (e) => e.target.closest('.demo-card')?.remove(),
-      })),
-      h('figcaption', {}, h('b', {}, d.title), h('span', {}, d.text))))));
+  const groups = [
+    ['01', '순서와 구조', '마디 퍼즐·악절 순서·다음 마디 고르기로 곡의 구조를 연습합니다.'],
+    ['02', '음표와 악상', '음표 빈칸·화음·악상 퀴즈로 세부 내용을 확인합니다.'],
+    ['03', '암기와 복습', '한 손 가리기·점점 지우기와 마디별 진도로 복습합니다.'],
+  ];
+  return h('section', { class: 'showcase', 'aria-labelledby': 'practice-types' },
+    h('h2', { id: 'practice-types' }, '연습 유형'),
+    h('div', { class: 'feature-grid' }, groups.map(([num,title,desc]) =>
+      h('article', { class: 'feature-card' }, h('span', { class: 'feature-num', 'aria-hidden': 'true' }, num),
+        h('h3', {}, title), h('p', {}, desc)))),
+    h('details', { class: 'demo-more' }, h('summary', {}, '연습 화면 더 보기'),
+      h('div', { class: 'demo-grid' }, DEMOS.slice(1).map((d) => h('figure', { class: 'demo-card' },
+        h('div', { class: 'demo-frame' }, h('img', {
+          src: d.gif, 'data-motion-src': d.gif, 'data-still-src': d.gif.replace('.gif','-still.png'),
+          alt: `${d.title} 사용 장면`, loading: 'lazy', decoding: 'async',
+          onError: (e) => e.target.closest('.demo-card')?.remove(),
+        })), h('figcaption', {}, h('b', {}, d.title), h('span', {}, d.text)))))));
 }
 
 function reportList() {
@@ -207,15 +215,21 @@ function reportList() {
 
 function hero() {
   const sample = state.library.find((p) => p.builtin);
-  return h('section', { class: 'hero' },
-    h('h1', {}, '내 악보를 올리면', h('br'), h('em', {}, '외울 수 있게'), ' 만들어 드려요'),
-    h('p', { class: 'hero-lead' }, '마디 퍼즐, 음표 빈칸, 악상 퀴즈로 눈과 귀와 손에 악보를 새겨 보세요.'),
-    h('div', { class: 'hero-cta' },
-      h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '악보 불러오기'),
-      sample ? h('button', { class: 'btn ghost big', onClick: () => openPiece(sample.id) }, '샘플로 먼저 해보기') : null),
-    h('p', { class: 'hero-sub' }, `MusicXML · XML · MXL 파일${isNarrow() ? '' : ' · 화면에 끌어다 놓아도 돼요'} · 파일은 서버로 전송되지 않아요`),
-    h('ul', { class: 'hero-chips' }, ['마디 퍼즐', '음표 빈칸', '악상 퀴즈', '한 손 가리기', '진도 복습'].map((t) => h('li', {}, t))),
-    reportList());
+  return h('section', { class: 'hero hero-layout' },
+    h('div', { class: 'hero-copy' },
+      h('p', { class: 'hero-kicker' }, 'MUSICXML 연습'),
+      h('h1', {}, '악보 암기'),
+      h('p', { class: 'hero-lead' }, 'MusicXML 악보로 마디 순서·음표·악상을 연습합니다.'),
+      h('div', { class: 'hero-cta' },
+        h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '악보 불러오기'),
+        sample ? h('button', { class: 'btn ghost big', onClick: () => openPiece(sample.id) }, '샘플로 연습') : null),
+      h('p', { class: 'hero-sub' }, 'MusicXML · XML · MXL, 파일당 최대 30MB. 악보와 진도는 이 브라우저에만 저장됩니다.'),
+      reportList()),
+    h('figure', { class: 'hero-preview' },
+      h('img', { src: 'assets/demo-puzzle.gif', 'data-motion-src': 'assets/demo-puzzle.gif',
+        'data-still-src': 'assets/demo-puzzle-still.png', alt: '마디를 순서대로 배치하는 악보 암기 연습 화면',
+        decoding: 'async', fetchpriority: 'high' }),
+      h('figcaption', {}, h('b', {}, '마디 퍼즐'), h('span', {}, '샘플 악보의 실제 연습 화면'))));
 }
 
 function viewLibrary() {
@@ -445,6 +459,7 @@ function go(route, params = {}) {
     route = 'library';
   }
   const tab = ['view', 'progress', 'library'].includes(route) ? route : 'practice';
+  main.classList.toggle('library-page', tab === 'library');
   for (const b of nav.querySelectorAll('button')) {
     const on = b.dataset.tab === tab;
     b.classList.toggle('on', on);

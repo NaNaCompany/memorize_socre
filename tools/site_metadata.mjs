@@ -1,0 +1,26 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {HEAD,FALLBACK} from './publisher-tracking.mjs';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const slug=path.basename(root);
+if(!['memorize_socre','score_reading'].includes(slug))throw Error('Unknown app');
+const origin='https://nanalab.kr/'+slug+'/';
+const descriptions={memorize_socre:'MusicXML 악보로 마디 순서, 음표, 악상과 한 손 암기를 연습합니다. 파일과 진도는 브라우저에만 저장됩니다.',score_reading:'MusicXML 악보의 변화표·셈여림·아티큘레이션을 색상으로 표시하고 재생·출력하는 초견 연습 도구입니다.'};
+let html=await fs.readFile(path.join(root,'index.html'),'utf8');
+// Regenerate owned integrations, retaining the app's original scripts and content.
+html=html.replace(/<!-- NaNa publisher integrations:[\s\S]*?<!-- \/NaNa publisher integrations -->/g,'');
+html=html.replace(/<noscript><iframe src="https:\/\/www\.googletagmanager\.com\/ns\.html\?id=GTM-NV2WWQXB"[\s\S]*?<\/noscript>/g,'');
+html=html.replace(/<link\b[^>]*rel="canonical"[^>]*>\s*/g,'');
+html=html.replace(/<meta\b[^>]*(?:property="og:url"|name="description")[^>]*>\s*/g,'');
+html=html.replace(/<link rel="icon" href="assets\/icon\.svg">\s*/g,'');
+html=html.replace('</head>',`<link rel="canonical" href="${origin}">\n<meta property="og:url" content="${origin}">\n<meta name="description" content="${descriptions[slug]}">\n<link rel="icon" href="assets/icon.svg">\n${HEAD}</head>`);
+html=html.replace('<body>','<body>'+FALLBACK);
+if(!html.includes('href="https://nanalab.kr/apps/"'))html=html.replace('</footer>','<a href="https://nanalab.kr/apps/" style="display:block;text-align:right;color:#999;font-size:10px;text-decoration:none;margin-top:12px">More Apps</a></footer>');
+html=html.replace(/\n{3,}/g,'\n\n');
+await fs.writeFile(path.join(root,'index.html'),html);
+await fs.writeFile(path.join(root,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}</loc></url></urlset>\n`);
+await fs.writeFile(path.join(root,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${origin}sitemap.xml\n`);
+await fs.writeFile(path.join(root,'ads.txt'),'google.com, pub-9767176956440077, DIRECT, f08c47fec0942fa0\n');
+await fs.writeFile(path.join(root,'.nojekyll'),'');
+console.log(JSON.stringify({slug,html_pages:1,sitemap_urls:1,publisher_integrations:4}));

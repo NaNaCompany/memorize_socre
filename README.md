@@ -63,3 +63,7 @@ GitHub Pages(브랜치 루트)로 배포합니다. 빌드 단계가 없습니다
 ## 라이선스와 출처
 
 악보 표시는 [Verovio](https://www.verovio.org/) 4.3.1(LGPL-3.0-or-later)을 `vendor/verovio/`에 그대로 포함합니다.
+
+## 사이트 메타데이터·게시자 통합
+
+`node tools/site_metadata.mjs`로 canonical, 4대 태그와 GTM noscript, sitemap.xml, robots.txt, ads.txt를 재생성합니다. `node --test tests/publisher.test.mjs`로 로컬 요청 차단과 입력값 제외를 검사합니다.
