@@ -45,7 +45,6 @@ export function mountOrder(root, ctx, kind) {
   });
 
   const pinned = new Set();
-  const players = new Map();
   let selected = null;
   let locked = false;
 
@@ -55,11 +54,8 @@ export function mountOrder(root, ctx, kind) {
   slotsEl.append(...slotEls);
 
   for (const p of pieces) {
-    players.set(p.pid, listenButton(score, p.from, p.to));
-    const el = h('div', { class: 'piece', 'data-pid': p.pid, tabindex: 0, role: 'button', 'aria-label': `악보 조각, 자리 바꾸기` },
-      fragmentBox(score, p.from, p.to, { scale: cfg.scale, noTime: true, noWords: true }),
-      h('button', { class: 'piece-play', 'aria-label': '이 조각 듣기', onClick: (e) => { e.stopPropagation(); players.get(p.pid).click(); } }, '▶'),
-      h('span', { class: 'grip', 'aria-hidden': 'true' }, '⠿'));
+    const el = h('div', { class: 'piece', 'data-pid': p.pid, tabindex: 0, role: 'button', 'aria-label': '악보 조각, 끌어서 자리 바꾸기' },
+      fragmentBox(score, p.from, p.to, { scale: cfg.scale, noTime: true, noWords: true }));
     el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tapPiece(p.pid); }
     });
@@ -158,9 +154,7 @@ export function mountOrder(root, ctx, kind) {
       over = -1;
     };
     el.addEventListener('pointerdown', (e) => {
-      if (locked || e.button !== 0 || e.target.closest('.piece-play') || pinned.has(pid)) return;
-      // 터치에서는 조각 몸통으로 화면을 스크롤하고, 손잡이로만 끈다.
-      if (e.pointerType === 'touch' && !e.target.closest('.grip')) return;
+      if (locked || e.button !== 0 || pinned.has(pid)) return;
       active = true;
       moved = false;
       startX = e.clientX;
@@ -169,9 +163,6 @@ export function mountOrder(root, ctx, kind) {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', finish);
       window.addEventListener('pointercancel', finish);
-    });
-    el.addEventListener('click', (e) => {
-      if (e.pointerType === 'touch' && !e.target.closest('.grip') && !e.target.closest('.piece-play')) tapPiece(pid);
     });
   }
 
