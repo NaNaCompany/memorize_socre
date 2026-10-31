@@ -1,0 +1,34 @@
+{
+  "samples": [
+    {
+      "id": "rachmaninoff-op39-no6",
+      "file": "samples/rachmaninoff-op39-no6.musicxml",
+      "title": "에튀드 타블로 Op. 39 No. 6",
+      "composer": "Sergei Rachmaninoff",
+      "source_filename": "laheumaninopeu-etwideu-tabeullo-op-39-no-6_colored.musicxml",
+      "source": "Files supplied by the site owner for these public samples",
+      "modifications": [
+        "Removed the identification element and all its descendants at the owner request; all other input bytes unchanged"
+      ],
+      "sha256": "c9df176e2fd3774c5d07afd6b6f323e792d3105b7db42267f94d0aee7667f6a0",
+      "source_sha256": "0063ce330b474b6408b0c4642ac4dc7162ea654964c2e702b889255ebaaa46bc",
+      "measures": 121,
+      "colored_elements": 1490
+    },
+    {
+      "id": "bartok-allegro-barbaro",
+      "file": "samples/bartok-allegro-barbaro.musicxml",
+      "title": "Allegro barbaro, Sz. 49",
+      "composer": "Béla Bartók",
+      "source_filename": "Allegro_Barbaro_colored.musicxml",
+      "source": "Files supplied by the site owner for these public samples",
+      "modifications": [
+        "Removed the identification element and all its descendants at the owner request; all other input bytes unchanged"
+      ],
+      "sha256": "6efd71e8902916785e8888028ccd02db7bfa69fbfa371ebf8614fc374b963134",
+      "source_sha256": "49707d04e7504ad1eae674d6b76983dfe849065d25f4bf04ac3aa9be29dd7956",
+      "measures": 224,
+      "colored_elements": 2165
+    }
+  ]
+}

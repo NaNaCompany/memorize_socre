@@ -50,7 +50,7 @@ python tools/serve.py 8766
 ## 예제 악보
 
 - `samples/little-waltz.musicxml`은 이 프로젝트용으로 새로 쓴 16마디 연습곡이라 저장소에 포함합니다. `python tools/make_sample.py`로 다시 만들 수 있습니다.
-- 출처와 이용 조건을 확인할 수 없는 전사본은 저장소에 넣지 않습니다. `data/`에 `rachmaninoff-op39-no6.musicxml`, `bartok-allegro-barbaro.musicxml`을 두면 로컬에서만 "예제"로 보입니다(`.gitignore`로 제외됨).
+- 사용자가 공개 샘플로 제공한 라흐마니노프 Op. 39 No. 6(121마디), 바르톡 Allegro barbaro(224마디)를 `samples/`에서 제공합니다. 요청에 따라 `<identification>`과 하위 요소만 제거했습니다. 파일의 나머지 바이트와 색상 속성은 그대로이며, 암기 앱의 기존 파서는 연습 표시를 위해 색상을 초기화합니다. 곡명·작곡가는 샘플 목록에 표시합니다. 원본 첨부는 변경하지 않았습니다. `samples/manifest.json`에 파일명·해시·변경 내역을 기록합니다.
 
 `assets/demo-*.gif`는 위 샘플 곡으로 실제 앱 화면을 캡처해 만든 메인 화면의 활용 장면입니다.
 

@@ -15,24 +15,16 @@ import { mountConfusion, mountTell } from './modes/confusion.js';
 import { mountViewer } from './modes/viewer.js';
 import { mountDashboard } from './modes/dashboard.js';
 
-// 예제 악보. samples/는 이 프로젝트용으로 새로 쓴 곡이라 저장소에 포함한다.
-// data/ 폴더의 파일은 출처를 확인할 수 없어 저장소에 넣지 않고, 로컬에 있을 때만 예제로 보인다.
+// Sample scores supplied for publication. Identification metadata was removed;
+// musical content and stored color attributes are retained in the files.
 const SAMPLES = [
   {
     id: 'sample-little-waltz', file: 'samples/little-waltz.musicxml', builtin: true, measures: 16,
     title: '작은 왈츠 (연습용 샘플)', composer: '새로 쓴 연습곡',
-    note: '이 프로젝트용으로 새로 쓴 연습곡입니다. 셈여림, 헤어핀, 스타카토, 화음, 비슷한 마디가 모두 들어 있어 기능을 체험하기 좋습니다.',
+    note: '이 프로젝트용으로 새로 쓴 16마디 연습곡입니다.',
   },
-  {
-    id: 'rachmaninoff-op39-no6', file: 'data/rachmaninoff-op39-no6.musicxml',
-    title: '에튀드 타블로 Op. 39 No. 6', composer: '라흐마니노프',
-    note: '곡은 1917년 출판된 퍼블릭 도메인 작품입니다. 악보 파일은 사용자가 구한 전사본이며 출판본과 대조 검수되지 않았습니다.',
-  },
-  {
-    id: 'bartok-allegro-barbaro', file: 'data/bartok-allegro-barbaro.musicxml',
-    title: 'Allegro barbaro, Sz. 49', composer: '바르톡',
-    note: '곡은 1918년 출판된 퍼블릭 도메인 작품입니다. 악보 파일은 사용자가 구한 전사본이며 출판본과 대조 검수되지 않았습니다.',
-  },
+  {"id": "rachmaninoff-op39-no6", "file": "samples/rachmaninoff-op39-no6.musicxml", "measures": 121, "title": "에튀드 타블로 Op. 39 No. 6", "composer": "Sergei Rachmaninoff", "note": "제공된 색상 표시 MusicXML 샘플입니다. identification 메타데이터를 제거했습니다. 암기 연습 화면은 기존 기능에 따라 색상 표시를 초기화합니다."},
+  {"id": "bartok-allegro-barbaro", "file": "samples/bartok-allegro-barbaro.musicxml", "measures": 224, "title": "Allegro barbaro, Sz. 49", "composer": "Béla Bartók", "note": "제공된 색상 표시 MusicXML 샘플입니다. identification 메타데이터를 제거했습니다. 암기 연습 화면은 기존 기능에 따라 색상 표시를 초기화합니다."},
 ];
 
 const MODES = [

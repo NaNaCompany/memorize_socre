@@ -1,0 +1,3 @@
+# Keep the supplied samples byte-identical after removing identification.
+/samples/rachmaninoff-op39-no6.musicxml -text
+/samples/bartok-allegro-barbaro.musicxml -text
