@@ -69,3 +69,7 @@ GitHub Pages(브랜치 루트)로 배포합니다. 빌드 단계가 없습니다
 ## 사이트 메타데이터·게시자 통합
 
 `node tools/site_metadata.mjs`로 canonical, 4대 태그와 GTM noscript, sitemap.xml, robots.txt, ads.txt를 재생성합니다. `node --test tests/publisher.test.mjs`로 로컬 요청 차단과 입력값 제외를 검사합니다.
+
+## 공유 미리보기 이미지
+
+`python tools/build_og.py`로 1200×630 PNG와 `assets/og.json`을 생성하고 `node tools/site_metadata.mjs`로 OG·Twitter 메타태그를 갱신합니다. 이미지 생성에는 Pillow와 한글 시스템 폰트가 필요합니다. 기본 폰트 폴더는 `C:/Windows/Fonts`이며 `--font-dir`로 변경할 수 있습니다. 폰트 파일·외부 이미지·업로드 악보는 배포 자산에 포함하지 않습니다.
