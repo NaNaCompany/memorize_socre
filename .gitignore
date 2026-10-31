@@ -1,0 +1,8 @@
+# 출처·이용 조건이 확인되지 않은 전사본은 공개 저장소에 올리지 않는다. 로컬 예제로만 쓴다.
+data/*.musicxml
+data/*.xml
+data/*.mxl
+*.colored.*
+.claude/
+.DS_Store
+Thumbs.db
