@@ -4,10 +4,11 @@ import { h, shuffle, fragmentBox, listenButton, quizFrame, emptyNote } from '../
 import { similarity, chunkSig } from '../score.js';
 import { playRange } from '../audio.js';
 
-function distractors(score, answerStart, len, count) {
+// avoid: 보기에 나오면 안 되는 악보(문제로 보여 준 마디 등)의 서명 목록.
+function distractors(score, answerStart, len, count, avoid = []) {
   const answerSig = chunkSig(score, answerStart, len);
   const answerM = score.measures[answerStart];
-  const seen = new Set([answerSig]);
+  const seen = new Set([answerSig, ...avoid]);
   const scored = [];
   for (let s = 0; s + len <= score.measures.length; s++) {
     if (s === answerStart) continue;
@@ -42,12 +43,16 @@ export function mountNext(root, ctx) {
   const score = ctx.score;
   const { from, to } = ctx.range();
   if (to - from < 1) { emptyNote(root, '2마디 이상 구간이 필요합니다.'); return; }
-  const shown = ctx.progress.pickStart(from, to - 1, 2);
+  // 문제 마디와 정답 마디가 같은 음이면 "다음 마디"를 가릴 수 없으니 다른 쌍을 고른다.
+  let shown = ctx.progress.pickStart(from, to - 1, 2);
+  for (let tries = 0; tries < 20 && score.measures[shown].sig === score.measures[shown + 1].sig; tries++) {
+    shown = ctx.progress.pickStart(from, to - 1, 2);
+  }
   const answer = shown + 1;
   const ui = quizFrame(root, ctx, { title: '다음 마디 고르기', prompt: '아래 마디 바로 다음에 오는 마디를 고르세요.' });
   ui.body.append(h('div', { class: 'stem-sheet' }, fragmentBox(score, shown, shown, { scale: 44 })));
 
-  const starts = shuffle([answer, ...distractors(score, answer, 1, 3)]);
+  const starts = shuffle([answer, ...distractors(score, answer, 1, 3, [score.measures[shown].sig])]);
   const sig = score.measures[answer].sig;
   ui.body.append(choiceGrid(score, starts, 1, (s, btn, grid) => {
     const ok = score.measures[s].sig === sig;
