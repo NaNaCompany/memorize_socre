@@ -53,7 +53,7 @@ export function mountHands(root, ctx) {
   const question = h('div', { class: 'stem-sheet' }, fragmentBox(score, target, target, { scale: 44, hand: show, noTime: true }));
   ui.body.append(question);
 
-  const grid = h('div', { class: 'sheet-choices' });
+  const grid = h('div', { class: 'sheet-choices compact' });
   shuffle([target, ...others]).forEach((m, i) => {
     const btn = h('button', {
       class: 'sheet-choice', 'aria-label': `${i + 1}번 보기`, 'data-measure': m,

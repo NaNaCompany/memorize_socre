@@ -248,7 +248,7 @@ function append(doc, parent, xmlTag, attrs = {}, text) {
 }
 
 // from~to 마디만 담은 독립 MusicXML을 만든다. transform(doc)으로 잘라낸 사본을 고칠 수 있다.
-export function buildFragment(score, from, to, { transform, noTime, hand } = {}) {
+export function buildFragment(score, from, to, { transform, noTime, noWords, hand } = {}) {
   const doc = NS_FREE.createDocument(null, 'score-partwise', null);
   const root = doc.documentElement;
   const partList = root.appendChild(doc.importNode(kid(score.root, 'part-list'), true));
@@ -269,6 +269,15 @@ export function buildFragment(score, from, to, { transform, noTime, hand } = {})
   });
   // 순서 문제에서는 조각마다 붙는 박자표가 단서가 되고 어색해 보여 뺀다.
   if (noTime) for (const t of doc.querySelectorAll('time')) t.remove();
+  // 빠르기말·표현말 같은 글자도 순서를 짐작하는 단서가 되고 조각을 좁게 만든다.
+  if (noWords) {
+    for (const dt of [...doc.querySelectorAll('direction-type')]) {
+      if (!kid(dt, 'words')) continue;
+      const dir = dt.parentElement;
+      dt.remove();
+      if (!kids(dir, 'direction-type').length) dir.remove();
+    }
+  }
   if (hand) keepHand(doc, root, hand, score.parts.length === 2);
   transform?.(doc);
   for (const out of kids(root, 'part')) pruneSpanners(out);

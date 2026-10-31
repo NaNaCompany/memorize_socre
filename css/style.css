@@ -330,7 +330,15 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
   .quiz-actions .btn { flex: 1 1 auto; }
   .choices { grid-template-columns: 1fr 1fr; }
   .choices.two { grid-template-columns: 1fr 1fr; }
-  .sheet-choices, .slots.grid, .compare { grid-template-columns: 1fr; }
+  .sheet-choices, .compare { grid-template-columns: 1fr; }
+  /* 한 마디짜리 조각·보기는 두 줄로 나란히 놓아 화면을 덜 차지하게 한다. */
+  .slots.grid, .sheet-choices.compact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .slots.grid .slot { min-height: 0; padding: 24px 4px 4px; align-items: stretch; }
+  .slots.grid .slot-num { top: 4px; left: 8px; }
+  .slots.grid .piece-play, .slots.grid .grip { width: 32px; height: 32px; font-size: 12px; }
+  .slots.grid .piece-tag { left: 44px; bottom: 8px; font-size: 11px; }
+  .sheet-choices.compact .sheet-choice { padding: 4px; }
+  .sheet-choices.compact .sheet { padding: 2px; }
   .sheet { padding: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .sheet.wide svg { min-width: 520px; }
   .piece .sheet { overflow: hidden; }

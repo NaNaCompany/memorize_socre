@@ -57,7 +57,7 @@ export function mountOrder(root, ctx, kind) {
   for (const p of pieces) {
     players.set(p.pid, listenButton(score, p.from, p.to));
     const el = h('div', { class: 'piece', 'data-pid': p.pid, tabindex: 0, role: 'button', 'aria-label': `악보 조각, 자리 바꾸기` },
-      fragmentBox(score, p.from, p.to, { scale: cfg.scale, noTime: true }),
+      fragmentBox(score, p.from, p.to, { scale: cfg.scale, noTime: true, noWords: true }),
       h('button', { class: 'piece-play', 'aria-label': '이 조각 듣기', onClick: (e) => { e.stopPropagation(); players.get(p.pid).click(); } }, '▶'),
       h('span', { class: 'grip', 'aria-hidden': 'true' }, '⠿'));
     el.addEventListener('keydown', (e) => {

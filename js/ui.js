@@ -29,10 +29,10 @@ export const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export const noteEl = (root, id) => root.querySelector(`[id="${id}"]`);
 
 // 악보 조각 하나를 그린 상자를 만든다. showNumbers가 아니면 마디 번호를 숨겨 답이 새지 않게 한다.
-export function fragmentBox(score, from, to, { transform, key, scale, showNumbers = false, cls = '', noTime = false, hand = 0 } = {}) {
+export function fragmentBox(score, from, to, { transform, key, scale, showNumbers = false, cls = '', noTime = false, noWords = false, hand = 0 } = {}) {
   const box = h('div', { class: `sheet ${showNumbers ? '' : 'no-numbers'} ${cls}` });
-  const xml = buildFragment(score, from, to, { transform, noTime, hand });
-  const cacheKey = transform ? null : (key || `${score.id}:${from}-${to}${noTime ? ':nt' : ''}${hand ? `:h${hand}` : ''}`);
+  const xml = buildFragment(score, from, to, { transform, noTime, noWords, hand });
+  const cacheKey = transform ? null : (key || `${score.id}:${from}-${to}${noTime ? ':nt' : ''}${noWords ? ':nw' : ''}${hand ? `:h${hand}` : ''}`);
   box.innerHTML = engraveFragment(xml, { key: cacheKey, scale });
   box.dataset.from = from;
   box.dataset.to = to;

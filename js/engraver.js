@@ -20,7 +20,8 @@ const BASE = {
 export function engraveFragment(xml, { scale = 42, key } = {}) {
   const cacheKey = key && `${key}@${scale}`;
   if (cacheKey && cache.has(cacheKey)) return cache.get(cacheKey);
-  tk.setOptions({ ...BASE, scale, breaks: 'none', adjustPageWidth: true, pageWidth: 60000, pageHeight: 60000 });
+  // 마디 오른쪽으로 삐져나오는 빠르기말·글자가 잘리지 않게 오른쪽 여백을 넉넉히 둔다.
+  tk.setOptions({ ...BASE, pageMarginRight: 90, scale, breaks: 'none', adjustPageWidth: true, pageWidth: 60000, pageHeight: 60000 });
   if (!tk.loadData(xml)) throw new Error('악보를 그리지 못했습니다.');
   const svg = tk.renderToSVG(1);
   if (cacheKey) {

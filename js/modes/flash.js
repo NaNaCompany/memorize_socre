@@ -27,7 +27,7 @@ function distractors(score, answerStart, len, count) {
 }
 
 function choiceGrid(score, starts, len, onPick) {
-  const grid = h('div', { class: 'sheet-choices' });
+  const grid = h('div', { class: `sheet-choices ${len === 1 ? 'compact' : ''}` });
   starts.forEach((s, i) => {
     const btn = h('button', { class: 'sheet-choice', 'aria-label': `${i + 1}번 보기`, onClick: () => onPick(s, btn, grid) },
       h('span', { class: 'choice-num' }, i + 1),
