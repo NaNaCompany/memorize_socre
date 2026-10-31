@@ -158,8 +158,9 @@ async function addFiles(files) {
 /* ---------- 보관함 ---------- */
 
 async function refreshLibrary() {
-  const mine = loadLibrary().filter((p) => !p.sample);
   const present = await Promise.all(SAMPLES.map((s) => fetch(s.file, { method: 'HEAD' }).then((r) => r.ok).catch(() => false)));
+  // A file may have been added while sample availability was being checked.
+  const mine = loadLibrary().filter((p) => !p.sample);
   state.library = [...mine, ...SAMPLES.filter((_, i) => present[i]).map((s) => ({ ...s, sample: true }))];
 }
 
@@ -205,6 +206,15 @@ function reportList() {
     h('b', {}, r.ok ? '완료' : '실패'), h('span', {}, r.ok ? r.text : `${r.name}: ${r.text}`)))) : null;
 }
 
+function recentScore() {
+  const last = state.library.find((piece) => piece.id === prefs.piece);
+  if (!last) return null;
+  return h('aside', { class: 'recent-score', 'aria-label': '최근 악보' },
+    h('div', { class: 'recent-score-info' }, h('span', {}, '최근 악보'),
+      h('strong', { title: last.title }, last.title)),
+    h('button', { class: 'btn ghost', onClick: () => openPiece(last.id) }, '이어서 연습'));
+}
+
 function hero() {
   const sample = state.library.find((p) => p.builtin);
   return h('section', { class: 'hero hero-layout' },
@@ -216,7 +226,7 @@ function hero() {
         h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '악보 불러오기'),
         sample ? h('button', { class: 'btn ghost big', onClick: () => openPiece(sample.id) }, '샘플로 연습') : null),
       h('p', { class: 'hero-sub' }, 'MusicXML · XML · MXL, 파일당 최대 30MB. 악보와 진도는 이 브라우저에만 저장됩니다.'),
-      reportList()),
+      reportList(), recentScore()),
     h('figure', { class: 'hero-preview' },
       h('img', { src: 'assets/demo-puzzle.gif', 'data-motion-src': 'assets/demo-puzzle.gif',
         'data-still-src': 'assets/demo-puzzle-still.png', alt: '마디를 순서대로 배치하는 악보 암기 연습 화면',
@@ -229,15 +239,8 @@ function viewLibrary() {
   const mine = state.library.filter((p) => !p.sample);
   const samples = state.library.filter((p) => p.sample);
 
-  const zone = h('div', { class: 'dropzone' },
-    h('h1', {}, '악보 추가'),
-    h('p', {}, 'MusicXML 파일을 끌어다 놓거나 아래 버튼으로 고르세요. 여러 개를 한 번에 올려도 됩니다.'),
-    h('button', { class: 'btn primary big', onClick: () => fileInput.click() }, '파일 선택'),
-    h('p', { class: 'dz-sub' }, isNarrow() ? '파일은 서버로 전송되지 않습니다.' : '또는 이 화면 아무 곳에나 끌어다 놓으세요. 파일은 서버로 전송되지 않습니다.'),
-    reportList(),
-  );
-
-  main.append(h('div', { class: 'library' }, mine.length ? zone : hero()));
+  // Saved scores are choices below the landing page, never a reason to skip it.
+  main.append(h('div', { class: 'library' }, hero()));
 
   const card = (p) => {
     const mastery = masteryOf(p);
@@ -480,6 +483,10 @@ nav.addEventListener('click', (e) => {
   if (tab) go(tab);
 });
 document.getElementById('piece-btn').addEventListener('click', () => go('library'));
+document.querySelector('.brand').addEventListener('click', (event) => {
+  event.preventDefault();
+  go('library');
+});
 document.getElementById('add-btn').addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => {
   const files = [...fileInput.files];
@@ -503,9 +510,12 @@ addEventListener('drop', (e) => {
 });
 
 (async function start() {
+  // Always start at the landing page, including reloads with a stale #practice.
+  // Keep the saved selection for the explicit resume banner; do not open it here.
+  state.library = [...loadLibrary().filter((piece) => !piece.sample),
+    ...SAMPLES.filter((piece) => piece.builtin).map((piece) => ({ ...piece, sample: true }))];
+  go('library');
   await refreshLibrary();
-  const route = location.hash.slice(1);
-  const last = state.library.find((p) => p.id === prefs.piece);
-  if (last && route !== 'library') await openPiece(last.id, route || 'practice');
-  else go('library');
+  // Do not replace an exercise the user opened while those HEAD requests ran.
+  if (location.hash === '#library') viewLibrary();
 }());

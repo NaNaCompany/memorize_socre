@@ -32,6 +32,11 @@ main.library-page { padding: 0; background: none; }
 .hero .btn.ghost { background: transparent; border-color: rgb(255 255 255 / .4); color: #fff; }
 .hero .btn.ghost:hover { background: rgb(255 255 255 / .1); border-color: #fff; }
 .hero-sub { color: rgb(255 255 255 / .7); max-width: 48ch; line-height: 1.7; font-size: 12px; }
+.recent-score { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 12px 14px; min-width: 0; border: 1px solid rgb(255 255 255 / .2); border-radius: 14px; background: rgb(255 255 255 / .08); }
+.recent-score-info { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.recent-score-info span { color: rgb(255 255 255 / .65); font-size: 11px; }
+.recent-score-info strong { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hero .recent-score .btn { flex: none; padding: 8px 12px; font-size: 12px; min-height: 40px; }
 .hero-preview { margin: 0; padding: 20px; background: #fff; border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 20px 50px rgb(0 0 0 / .15); min-width: 0; }
 .hero-preview img { display: block; width: 100%; height: auto; border-radius: 8px; }
 .hero-preview figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 13px; margin-top: 12px; font-size: 13px; color: var(--muted); }
