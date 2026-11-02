@@ -34,3 +34,10 @@
 - OG title/description/type/locale/site_name/url/image와 image secure_url/type/width/height/alt, Twitter summary_large_image/title/description/image/alt를 소스 생성기에 추가했다. HTTPS 절대 URL 사용, 중복 필드 없음과 재생성 멱등성을 검사했다. 규격 참고: https://ogp.me/.
 - 기존 앱 body와 런타임, 진입 화면/최근 악보 배너·샘플·색상·진도·4대 게시자 태그·GTM noscript·사이트맵·robots는 보존했다. OG 이미지 자체는 픽셀로 열어 검토했다. 실제 카톡·X에서 공유한 화면이나 플랫폼 미리보기 캐시 갱신은 별도 검증이며 완료로 주장하지 않는다.
 - 배포 SHA, 공개 HTML·PNG·bot User-Agent 응답 대조 결과: workspace .tools/music-og-20261031/의 static-check.json·publish.json·live-check.json·completion.json.
+
+## 2026-11-02 — Shared book banner
+
+- Connected all public page types to `https://nanalab.kr/src_cdn/banner/astra.js`. Campaign, design, translated controls and the supplied YES24 book destination are maintained centrally in src_cdn.
+- Shared archive assets load the banner on detail/list pages; other HTML and source templates include the stable deferred loader. HTML-only generator adapters retain the connection after rebuilds and pass non-HTML values through unchanged.
+- The component is closable for the tab session, clears detected bottom navigation, and hides for modals/fullscreen/mobile input. The Astra practice site remains excluded. No additional analytics or ad-network requests are introduced by the component.
+- Existing content, routes and publisher integrations are preserved. Direct HTML changes restore exactly to the baseline when the marked loader is removed. Workspace validation/deployment evidence: `.tools/shared-book-banner-20261102/`.
