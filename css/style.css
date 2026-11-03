@@ -385,6 +385,23 @@ main { max-width: 1120px; margin: 0 auto; padding: 22px 24px 40px; min-height: 7
   .stats { grid-template-columns: 1fr 1fr; }
 }
 
+/* Keep quiz notation within 30% of the visible viewport on phones/tablets,
+   including landscape devices wider than the narrow navigation breakpoint.
+   Bound the SVG viewport, not just its clipped wrapper; Verovio's viewBox
+   preserves the whole score at the smaller size. Reserve padding + border. */
+@media (max-width: 1024px), (pointer: coarse) {
+  .quiz .sheet { max-height: 30vh; max-height: 30svh; max-height: 30dvh; overflow: hidden; }
+  .quiz .sheet > svg {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: calc(30vh - 14px);
+    max-height: calc(30svh - 14px);
+    max-height: calc(30dvh - 14px);
+    object-fit: contain;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
